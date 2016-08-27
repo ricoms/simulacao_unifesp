@@ -10,5 +10,5 @@ Em sistema Windows, seguir as instalações em:
 * https://www.rstudio.com/products/rstudio/download3/
 
 ## Sites importantes para este projeto
-*http://shiny.rstudio.com/
-*https://www.shinyapps.io/
+* http://shiny.rstudio.com/
+* https://www.shinyapps.io/
