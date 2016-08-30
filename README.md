@@ -16,17 +16,23 @@ Em sistema Windows, seguir as instalações em:
 
 ## Comandos git para puxar (pull) e realizar 'commit' (push)
 
-clonar o repositório para sua pasta de trabalho:
+clonar o repositório **para sua pasta de trabalho**:
 
-* git clone 
+* git clone https://github.com/ricoms/simulacao_unifesp.git
 
 submeter atualizações do seu projeto local para o repositório (github):
 fique na pasta do seu projeto e digite os seguintes comando:
 
 * git add .
-* git commit -m "<mensage>*"
+* git commit -m "<mensagem>*"
 * git push
 
-caso outro usuário tenha atualizado o repositório (github), para atualizar sua pasta local utilize:
+Obs 1: No lugar de <mensagem>, colocar uma mensagem explicativa relativa ao commit. Por exemplo: "Resolução do issue #2"
+
+Caso outro usuário tenha atualizado o repositório (github), para atualizar sua pasta local utilize:
 
 * git pull
+
+Obs 2: Todos os comandos acima devem ser realizados na pasta de trabalho do projeto local (em seu pc).
+
+Qualquer dúvida, há um tutorial do próprio github: https://git-scm.com/docs/gittutorial
