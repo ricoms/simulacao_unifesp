@@ -24,10 +24,10 @@ submeter atualizações do seu projeto local para o repositório (github):
 fique na pasta do seu projeto e digite os seguintes comando:
 
 * git add .
-* git commit -m "<mensagem>*"
+* git commit -m "\<mensagem\>*"
 * git push
 
-Obs 1: No lugar de <mensagem>, colocar uma mensagem explicativa relativa ao commit. Por exemplo: "Resolução do issue #2"
+Obs 1: No lugar de \<mensagem\>, colocar uma mensagem explicativa relativa ao commit. Por exemplo: "Resolução do issue #2"
 
 Caso outro usuário tenha atualizado o repositório (github), para atualizar sua pasta local utilize:
 
