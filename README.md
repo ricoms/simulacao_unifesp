@@ -13,6 +13,7 @@ Em sistema Windows, seguir as instalações em:
 ## Sites importantes para este projeto
 * http://shiny.rstudio.com/
 * https://www.shinyapps.io/
+* install.packages("rmarkdown")
 
 ## Comandos git para puxar (pull) e realizar 'commit' (push)
 
