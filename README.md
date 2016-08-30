@@ -13,3 +13,20 @@ Em sistema Windows, seguir as instalações em:
 ## Sites importantes para este projeto
 * http://shiny.rstudio.com/
 * https://www.shinyapps.io/
+
+## Comandos git para puxar (pull) e realizar 'commit' (push)
+
+clonar o repositório para sua pasta de trabalho:
+
+* git clone 
+
+submeter atualizações do seu projeto local para o repositório (github):
+fique na pasta do seu projeto e digite os seguintes comando:
+
+* git add .
+* git commit -m "<mensage>*"
+* git push
+
+caso outro usuário tenha atualizado o repositório (github), para atualizar sua pasta local utilize:
+
+* git pull
