@@ -39,4 +39,4 @@ Qualquer dúvida, há um tutorial do próprio github: https://git-scm.com/docs/g
 
 E há outros tutoriais também, estes são legais:
 * http://gabsferreira.com/instalando-o-git-e-configurando-github/
-* * https://www.digitalocean.com/community/tutorials/como-instalar-o-git-no-ubuntu-14-04-pt
+* https://www.digitalocean.com/community/tutorials/como-instalar-o-git-no-ubuntu-14-04-pt
