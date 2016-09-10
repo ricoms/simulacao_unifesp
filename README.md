@@ -1,5 +1,7 @@
 # simulacao_unifesp
 Repositório para projeto da UC **Simulação se sistemas**
+* pasta para guardar principais referências: https://drive.google.com/drive/folders/0B4BDW57sxsyvRHRPVnVsT04xNlE?usp=sharing
+* link para o texto do artigo: https://www.overleaf.com/6125904mkqzzy
 
 # Instalando requisitos do projeto
 Em sistema Ubuntu, realizar até o passo 4 deste tutorial:
@@ -10,12 +12,14 @@ Em sistema Windows, seguir as instalações em:
 * https://cran.r-project.org/
 * https://www.rstudio.com/products/rstudio/download3/
 
+Após instalar o R e R-Studio, aplicar o comando abaixo para instalar o:
+* install.packages("shiny")
+
 ## Sites importantes para este projeto
 * http://shiny.rstudio.com/
 * https://www.shinyapps.io/
-* install.packages("rmarkdown")
 
-## Comandos git para puxar (pull) e realizar 'commit' (push)
+# Comandos git para puxar (pull) e realizar 'commit' (push)
 
 Clonar o repositório **para sua pasta de trabalho**:
 
