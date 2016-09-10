@@ -12,7 +12,7 @@ Em sistema Windows, seguir as instalações em:
 * https://cran.r-project.org/
 * https://www.rstudio.com/products/rstudio/download3/
 
-Após instalar o R e R-Studio, aplicar o comando abaixo para instalar o:
+Após instalar o R e RStudio, aplicar o comando abaixo para instalar o:
 * install.packages("shiny")
 
 ## Sites importantes para este projeto
