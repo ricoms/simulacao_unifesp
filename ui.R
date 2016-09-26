@@ -7,7 +7,8 @@ ui <- dashboardPage(skin = "yellow",
   
   dashboardSidebar(
     sidebarMenu(
-      menuItem("App", tabName = "app", icon = icon("home"))
+      menuItem("App", tabName = "app", icon = icon("home")),
+      menuItem("About", tabName = "about", icon = icon("glyphicon glyphicon-info-sign", lib= "glyphicon"))
     )
   ),
   
@@ -84,9 +85,19 @@ ui <- dashboardPage(skin = "yellow",
         )
         # Fim de Painel para importação de arquivo
         ########################
-      )
+        
+        ############################## incluir aqui janela de configuração da função boot
+      ),
       # Fim de TabItem "app"
       ########################
+      
+      ########################
+      # Painel about
+      tabItem(tabName = "about",
+              h2("Projeto: Bootstrap analyzer"),
+              p("Orientadora: Prof. Dra. Camila Bertini Martins"),
+              p("Alunos: Alexandre Hild Aono (92169) & Ricardo Manhães Savii (92482)")
+      )
     )
     # Fim de TabItems
     ########################

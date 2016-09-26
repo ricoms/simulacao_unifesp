@@ -8,7 +8,7 @@ source('source_files/data_examples_app.R', local=TRUE)
 
 server <- function(input, output) {
   
-  # definições feitas pelo usuário na aplicação
+  # configurações do usuário para upload de arquivo
   header <- reactive({
     input$header
   })
@@ -39,18 +39,12 @@ server <- function(input, output) {
     values$data <- read.table(inFile$datapath, header = header(), sep = sep(), quote = quote())
   })
   
-  # dados é a variável final que será levada até o plot
-  dados <- reactiveValues(data = df1)
-  
-  # dados só é atualizado quando botão plot (Submeter) é apertado
-  observeEvent(input$plot, {
-    dados$data <- values$data
-  })
-  
   # Representa/renderiza a rHandsonTable
   output$hot_table <- renderRHandsontable({
-    rhandsontable(values$data, rowHeaders = NULL) %>%
-      hot_table(highlightCol = TRUE, highlightRow = TRUE, allowRowEdit=TRUE) %>%
+    rhandsontable(values$data, rowHeaders = FALSE,
+                  useTypes = FALSE, colHeaders = TRUE) %>%
+      hot_table(highlightCol = TRUE, highlightRow = TRUE,
+                allowRowEdit=TRUE) %>%
       hot_cols(columnSorting = TRUE, allowInvalid = TRUE)
   })
   
@@ -63,4 +57,14 @@ server <- function(input, output) {
       write.csv(values$data, file, row.names = FALSE)
     }
   )
+  
+  # dados é a variável final que será levada para análise
+  dados <- reactiveValues(data = df1)
+  
+  # dados só é atualizado quando botão plot (Submeter) é apertado
+  observeEvent(input$run, {
+    dados$data <- values$data
+  })
+  
+  ######################## incluir embaixo a análise bootstrap
 }
