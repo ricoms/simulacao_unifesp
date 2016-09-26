@@ -2,7 +2,6 @@
 
 library(shiny)
 library(rhandsontable)
-library(meta)
 library(boot)
 
 source('source_files/data_examples_app.R', local=TRUE)
