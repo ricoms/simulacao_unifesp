@@ -1,11 +1,12 @@
 ---
 title: "Bootstrap App"
-author: "Alexandre Hild Aono & Ricardo Manhães Savii"
+author: "Alexandre Hild Aono - 92169<br>Ricardo Manhães Savii - 92482"
 date: "5 de Outubro de 2016"
 output: 
   ioslides_presentation: 
     fig_caption: yes
     css: presentation_custom.css
+    logo: unifesp-logo-verde.png
 runtime: shiny
 ---
 
@@ -22,21 +23,7 @@ To learn more, see [Interactive Documents](http://rmarkdown.rstudio.com/authorin
 ## Interactive Plot
 
 ```{r eruptions}
-inputPanel(
-  selectInput("n_breaks", label = "Number of bins:",
-              choices = c(10, 20, 35, 50), selected = 20),
-  
-  sliderInput("bw_adjust", label = "Bandwidth adjustment:",
-              min = 0.2, max = 2, value = 1, step = 0.2)
-)
 
-renderPlot({
-  hist(faithful$eruptions, probability = TRUE, breaks = as.numeric(input$n_breaks),
-       xlab = "Duration (minutes)", main = "Geyser eruption duration")
-  
-  dens <- density(faithful$eruptions, adjust = input$bw_adjust)
-  lines(dens, col = "blue")
-})
 ```
 
 ## Bullets
@@ -47,8 +34,9 @@ renderPlot({
 
 ## R Output
 
-```{r cars}
-summary(cars)
+```{python}
+for i in range(1,10):
+  print "Hello World!" + str(i)
 ```
 
 
