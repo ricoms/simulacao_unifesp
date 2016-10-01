@@ -12,6 +12,8 @@ bibliography: bibliography.bib
 nocite: |
   @boot97
 ---
+<!-- Caso alguma referência seja importante e quer que apareça na bibliografia, mas não irá cita-la no texto, inclua na linha 13, assim: @boot97, <reference-key>.
+Sendo o <reference-key> a chave da referência que colocou no arquivo bibliography.bib -->
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
