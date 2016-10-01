@@ -8,6 +8,9 @@ output:
     css: presentation_custom.css
     logo: unifesp-logo-branco.png
 runtime: shiny
+bibliography: bibliography.bib
+nocite: |
+  @boot97
 ---
 
 ```{r setup, include=FALSE}
@@ -22,11 +25,11 @@ To learn more, see [Interactive Documents](http://rmarkdown.rstudio.com/authorin
 
 Sugiro este link também: [formatando apresetações](http://rmarkdown.rstudio.com/ioslides_presentation_format.html)
 
-## Interactive Plot
+## Pacotes
 
-```{r eruptions}
+<em>Shiny</em> [@shiny] e <em>Boot</em> [@boot16]
 
-```
+
 
 ## Bullets
 
@@ -36,7 +39,7 @@ Sugiro este link também: [formatando apresetações](http://rmarkdown.rstudio.c
 
 ## Python Output
 
-```{python}
+```{python teste}
 for i in range(1,10):
   print "Hello World!" + str(i)
 ```
@@ -50,3 +53,5 @@ for i in range(1,10):
 > Alexandre Hild Aono (92169)
 
 > Ricardo Manhães Savii (92482)
+
+## Referências
