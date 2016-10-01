@@ -4,8 +4,8 @@ author: "Alexandre Hild Aono - 92169<br>Ricardo Manhães Savii - 92482"
 date: "5 de Outubro de 2016"
 output: 
   ioslides_presentation: 
-    fig_caption: yes
     css: presentation_custom.css
+    fig_caption: yes
     logo: unifesp-logo-branco.png
 runtime: shiny
 bibliography: bibliography.bib
@@ -19,33 +19,51 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Shiny Presentation {#apresentacao}
 
-This R Markdown presentation is made interactive using Shiny. The viewers of the presentation can change the assumptions underlying what's presented and see the results immediately. 
+Alexandre, deixe este como referência, depois tiramos.
 
-To learn more, see [Interactive Documents](http://rmarkdown.rstudio.com/authoring_shiny.html).
+Para aprender mais, veja [Interactive Documents](http://rmarkdown.rstudio.com/authoring_shiny.html).
 
 Sugiro este link também: [formatando apresetações](http://rmarkdown.rstudio.com/ioslides_presentation_format.html)
 
+<!-- Isto é um comentário -->
+<!-- Para inserir um novo slide basta criar um título nível 2 -->
+
+## Novo slide
+
+
+
+<!-- Farei à partir daqui -->
 ## Pacotes
 
 <em>Shiny</em> [@shiny] e <em>Boot</em> [@boot16]
 
 
+## Técnicas e funções
 
-## Bullets
+## Interface do Aplicativo
 
-- Bullet 1
-- Bullet 2
-- Bullet 3
-
-## Python Output
-
-```{python teste}
-for i in range(1,10):
-  print "Hello World!" + str(i)
+```{r app}
+shinyApp(
+  ui = fluidPage(
+    selectInput("region", "Region:", choices = colnames(WorldPhones)),
+    plotOutput("phonePlot")
+  ),
+  server = function(input, output) {
+    output$phonePlot <- renderPlot({
+      barplot(WorldPhones[,input$region]*1000, 
+              ylab = "Number of Telephones", xlab = "Year")
+    })
+  },
+  options = list(height = 500)
+)
 ```
 
 
+## Objetivo do Aplicativo
 
+
+
+<!-- Agradecimentos-->
 ## Bootstrap App
 
 ### <strong>Obrigado!</strong>
@@ -54,4 +72,9 @@ for i in range(1,10):
 
 > Ricardo Manhães Savii (92482)
 
-## Referências
+<!-- aqui o rmarkdown irá criar automaticamente nossa bibliografia,
+basta referências no seu texto como [@<reference-key>] ou [-@<reference-key].
+Sendo o <reference-key> a chave da referência que colocou no arquivo bibliography.bib -->
+## Referências {.smaller}
+
+<!-- Ah! caso queira colocar mais texto do que cabe em um slide, user o tag que usei acima {.smaller} ao lado do título do slide. Assim a letra ficará menor -->
