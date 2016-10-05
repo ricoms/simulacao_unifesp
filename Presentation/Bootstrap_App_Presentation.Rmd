@@ -7,63 +7,233 @@ output:
     css: presentation_custom.css
     fig_caption: yes
     logo: unifesp-logo-branco.png
+    incremental: true
 runtime: shiny
 bibliography: bibliography.bib
 nocite: |
-  @boot97
+  @boot16
 ---
 <!-- Caso alguma referência seja importante e quer que apareça na bibliografia, mas não irá cita-la no texto, inclua na linha 13, assim: @boot97, <reference-key>.
 Sendo o <reference-key> a chave da referência que colocou no arquivo bibliography.bib -->
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+require(shiny)
 ```
 
-## Shiny Presentation {#apresentacao}
+<!-- ## Shiny Presentation {#apresentacao} -->
 
-Alexandre, deixe este como referência, depois tiramos.
+<!-- Alexandre, deixe este como referência, depois tiramos. -->
 
-Para aprender mais, veja [Interactive Documents](http://rmarkdown.rstudio.com/authoring_shiny.html).
+<!-- Para aprender mais, veja [Interactive Documents](http://rmarkdown.rstudio.com/authoring_shiny.html). -->
 
-Sugiro este link também: [formatando apresetações](http://rmarkdown.rstudio.com/ioslides_presentation_format.html)
+<!-- Sugiro este link também: [formatando apresetações](http://rmarkdown.rstudio.com/ioslides_presentation_format.html) -->
 
-<!-- Isto é um comentário -->
-<!-- Para inserir um novo slide basta criar um título nível 2 -->
+<!-- Teoria -->
+## Introdução
 
-## Novo slide
+O <b>objetivo do projeto</b> é criarmos um aplicativo web para facilitar a aplicação de técnicas estatísticas.
 
+## Técnica escolhida
 
+<b>Bootstrap</b>
 
-<!-- Farei à partir daqui -->
+Afinal, o que é <em>bootstrap</em>?
+
+tradução: alça de botina ou, na academia, inicialização de sistemas.
+
+* É um método de reamostragem proposto por <b>Bradley Efron</b> em 1979
+
+* Utilizado para <b>estimar a distribuição amostral de um estimador</b> realizando a reamostragem com substituição da amostra original.
+
+## Por quê usar bootstrap?
+
+Efron desenvolveu a técnica para cálculo de intervalos de confiança de parâmetros, para situações em que outras técnicas não são aplicáveis, particularmente em casos em que o número de amostras é reduzido.
+
+* A técnica de bootstrap tenta realizar o que seria desejável, se fosse possível: <b>repetir a experiência</b>
+
+* Para assim obter </b>intervalos de confiança</b> e <b>erros padrões</b> mais robustos de um parâmetro como média, mediana, odds ratio (razão de probabilidades), coeficiente de correlação ou regressão.
+
+## Quando usar?
+
+* Quando queremos realizar alguma inferência testando hipóteses duvidósas baseadas em hipóteses paramétricas.
+
+* Ou quando inferência paramétrica é impossível ou requer cálculos muito complexos para os erros padrões.
+
+## Como funciona?
+
+* Seja $X = (X_1, X_2, \ldots, X_n)$ uma amostra contendo $n$ observações.
+
+* Construiremos $B$ amostras $X^{*(1)}, \ldots, X^{*(B)}$ independentes e identicamente distribuídas (i.i.d.) todas com comprimento $n$.
+
+* Na terminologia de <em>bootstrapping</em> as $B$ amostras i.i.d. construídas a partir da população finita $(X_1, \ldots, X_n)$ correspondem a amostra com substituição a partir do conjunto X.
+
+<!-- Prática -->
 ## Pacotes
 
-<em>Shiny</em> [@shiny] e <em>Boot</em> [@boot16]
+<em>Shiny</em> [@shiny] 
 
+<em>Boot</em> [@boot97] e/ou <em>Bootstrap</em> [@efron1994introduction]
 
-## Técnicas e funções
+<!-- <em>Metafor</em> [@viechtbauer2010metafor] e/ou <em>Meta</em> [@schwarzer2015meta] -->
 
-## Interface do Aplicativo
+## Shiny
 
-```{r app}
+Pacote na linguagem R que intermedia a criação de aplicativos web, sem necessidade de `html`, `css` e `javascript` (opcionais).
+
+Tem um tutorial muito bom e detalhado:
+[http://shiny.rstudio.com/](http://shiny.rstudio.com/)
+
+## Shiny App (code) {.smaller}
+
+```{r echo=TRUE, eval=FALSE}
+  require(shiny)
+
+  ui = fluidPage(
+    sliderInput("n", "Quantidade de números gerados:",
+      min = 0, max = 100000, value = 500
+    ),
+    plotOutput("plot")
+  ),
+  
+  server = function(input, output) {
+    trans_inv_n = function(n) {
+      sqrt(8*runif(n)+1)
+    }
+    output$plot <- renderPlot({
+      plot(density(trans_inv_n(input$n)),
+           ylab = "density", xlab= paste("n=", n),
+           main = "plot da minha função: exercício 1")
+    })
+  }
+```
+
+## Shiny App
+
+```{r}
 shinyApp(
   ui = fluidPage(
-    selectInput("region", "Region:", choices = colnames(WorldPhones)),
-    plotOutput("phonePlot")
+    sliderInput("obs", "Quantidade de números gerados:",
+      min = 0, max = 100000, value = 500
+    ),
+    plotOutput("plot")
   ),
   server = function(input, output) {
-    output$phonePlot <- renderPlot({
-      barplot(WorldPhones[,input$region]*1000, 
-              ylab = "Number of Telephones", xlab = "Year")
+    trans_inv_n = function(n) {
+      sqrt(8*runif(n)+1)
+    }
+    output$plot <- renderPlot({
+      plot(density(trans_inv_n(input$obs)),
+           ylab = "density", xlab= paste("n=", input$obs),
+           main = "plot da minha função: exercício 1")
     })
   },
   options = list(height = 500)
 )
 ```
 
+## Bootstrap packages {.smaller}
+
+```{r}
+help_console <- function(topic, format=c("text", "html", "latex", "Rd"),
+                         lines=NULL, before=NULL, after=NULL) {  
+  format=match.arg(format)
+  if (!is.character(topic)) topic <- deparse(substitute(topic))
+  helpfile = utils:::.getHelpFile(help(topic))
+
+  hs <- capture.output(switch(format, 
+                              text=tools:::Rd2txt(helpfile),
+                              html=tools:::Rd2HTML(helpfile),
+                              latex=tools:::Rd2latex(helpfile),
+                              Rd=tools:::prepare_Rd(helpfile)
+                              )
+                      )
+  if(!is.null(lines)) hs <- hs[lines]
+  hs <- c(before, hs, after)
+  cat(hs, sep="\n")
+  invisible(hs)
+}
+
+require(boot)
+help_console(boot, "html", lines = 12:23)
+
+require(bootstrap)
+help_console(bootstrap, "html", lines = 10:14)
+```
+
+### Boot Package
+
+```
+boot(data, statistic, R, sim = "ordinary", stype = c("i", "f", "w"), 
+     strata = rep(1,n), L = NULL, m = 0, weights = NULL, 
+     ran.gen = function(d, p) d, mle = NULL, simple = FALSE, ...,
+     parallel = c("no", "multicore", "snow"),
+     ncpus = getOption("boot.ncpus", 1L), cl = NULL)
+```
+
+## Exemplo do livro {.smaller}
+
+[@boot97] p. 526
+
+```{r echo=TRUE}
+library(boot)
+print(city)
+```
+
+## Exemplo do livro {.smaller}
+
+[@boot97] p. 526 
+
+```{r echo=TRUE}
+  library(boot)
+  city.fun <- function(data, i) {
+    d <- data[i,]
+    mean(d$x)/mean(d$u)
+  }
+  city.boot <- boot(data=city, statistic=city.fun, R=50)
+  city.boot
+```
+
+## Exemplo do livro {.smaller}
+
+[@boot97] p. 526
+
+```{r echo=TRUE}
+plot(city.boot)
+```
+
+
+## Possível Interface do Aplicativo {.smaller}
+
+```{r app}
+shinyApp(
+  ui = fluidPage(
+    sliderInput("R", "Altere o valor de R",
+      min = 2, max = 1000, value = 50
+    ),
+    plotOutput("plot")
+  ),
+  server = function(input, output) {
+    city.fun <- function(data, i) {
+      d <- data[i,]
+      mean(d$x)/mean(d$u)
+    }
+    output$plot <- renderPlot({
+      plot(boot(data=city, statistic=city.fun, R=input$R))
+    })
+  },
+  
+  options = list(height = 500)
+)
+```
 
 ## Objetivo do Aplicativo
 
+Expandir, facilitar e orientar sobre a utilização de ferramentas estatísticas.
 
+Pretendemos enfrentar um problema emergente da atualiza, muitos estudos realizados utilizam estatísticas incorretamente. Com isso, muito conhecimento científico está se tornando duvidoso.
+
+Um projeto internacional interessante nessa questão é: [https://osf.io/](https://osf.io/)
 
 <!-- Agradecimentos-->
 ## Bootstrap App
