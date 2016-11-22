@@ -3,6 +3,7 @@
 library(shiny)
 library(rhandsontable)
 library(boot)
+library(meta)
 
 source('source_files/data_examples_app.R', local=TRUE)
 
@@ -66,5 +67,57 @@ server <- function(input, output) {
     dados$data <- values$data
   })
   
-  ######################## incluir embaixo a análise bootstrap
+  ################################################
+  # Cálculo do objeto meta
+  ################################################
+  meta <- reactive({
+    source('define_meta_app.R', local=TRUE)
+    if (modelo$data %in% names(compute_meta)) {
+      meta <- do.call(compute_meta[[modelo$data]], arg_meta[[modelo$data]])
+    } else {
+      NULL
+    }
+  })
+  
+  ################################################
+  # Renderização do forest plot
+  ################################################
+  plotForest <- function(){
+    meta <- meta()
+    if (!is.null(meta)) {
+      if (1-pchisq(meta$Q, meta$df.Q) > alpha()) { # if p-value > alpha só apresenta fixed effect model
+        forest(meta, studlab = paste(dados$data$Estudos),
+               comb.random=FALSE, comb.fixed=TRUE)
+      } else {
+        forest(meta, studlab = paste(dados$data$Estudos),
+               comb.random=TRUE, comb.fixed=FALSE)
+      }
+    } else {
+      frame()
+    }
+  }
+  output$forest <- renderPlot ({
+    plotForest()
+  })
+  # Permite realizar o download da figura Forest
+  output$downloadForest <- downloadHandler(
+    filename <- function() {
+      paste('forest_', Sys.Date(), '.pdf', sep='')
+    },
+    content <- function(FILE=NULL) {
+      pdf(file=FILE)
+      plotForest()
+      dev.off()
+    }
+  )
+  
+  ################################################
+  # aplicar o boot nas estatísticas de objeto 'meta'
+  ################################################
+  
+  
+  ################################################
+  # retornar plot(boot(data = amostra, statistic = amostra.mean, R = 1000))
+  ################################################
+  
 }

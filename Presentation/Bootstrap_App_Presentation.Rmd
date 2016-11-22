@@ -30,9 +30,15 @@ require(shiny)
 <!-- Sugiro este link também: [formatando apresetações](http://rmarkdown.rstudio.com/ioslides_presentation_format.html) -->
 
 <!-- Teoria -->
-## Introdução
+## Objetivo e Motivação
 
 O <b>objetivo do projeto</b> é criarmos um aplicativo web para facilitar a aplicação de técnicas estatísticas.
+
+Expandir, facilitar e orientar sobre a utilização de ferramentas estatísticas.
+
+Pretendemos enfrentar um problema emergente da atualiza, muitos estudos realizados utilizam estatísticas incorretamente. Com isso, muito conhecimento científico está se tornando duvidoso.
+
+Um projeto internacional interessante nessa questão é: [https://osf.io/](https://osf.io/)
 
 ## Técnica escolhida
 
@@ -161,7 +167,7 @@ require(bootstrap)
 help_console(bootstrap, "html", lines = 10:14)
 ```
 
-### Boot Package
+## Boot Package
 
 ```
 boot(data, statistic, R, sim = "ordinary", stype = c("i", "f", "w"), 
@@ -226,14 +232,6 @@ shinyApp(
   options = list(height = 500)
 )
 ```
-
-## Objetivo do Aplicativo
-
-Expandir, facilitar e orientar sobre a utilização de ferramentas estatísticas.
-
-Pretendemos enfrentar um problema emergente da atualiza, muitos estudos realizados utilizam estatísticas incorretamente. Com isso, muito conhecimento científico está se tornando duvidoso.
-
-Um projeto internacional interessante nessa questão é: [https://osf.io/](https://osf.io/)
 
 <!-- Agradecimentos-->
 ## Bootstrap App
