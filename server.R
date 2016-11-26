@@ -22,6 +22,12 @@ server <- function(input, output) {
                  width = 100, step = 0.01)
   })
   
+  #Selecionar media ou mediana para teste Q
+  output$options3 <- renderUI({
+    selectInput(inputId = "options3", label = "Statistic for Bootstrapping",
+                 choices = c("Mean","Median"), selected=NULL)
+  })
+  
   #Abas sendo criadas
   output$desc <- renderUI({
     if(input$go){
@@ -217,9 +223,42 @@ server <- function(input, output) {
   # aplicar o boot nas estatísticas de objeto 'meta'
   ################################################
   plotBoot <- function(){
-    meta <- meta()
+    meta1 = metaprop(event = df_prop$eventos, n = df_prop$n,
+                     sm = "PLOGIT", method.ci = "CP", method.tau = "DL")
     
+    meta2 = metacont(data = df_med1,
+                     n.e = df_med1$n.e, mean.e = df_med1$mean.e, sd.e = df_med1$sd.e,
+                     n.c = df_med1$n.c, mean.c = df_med1$mean.c, sd.c = df_med1$sd.c,
+                     sm = "SM", method.tau = "DL")
     
+    media = function(data, i){
+      mean(data[i])
+    }
+    mediana = function(data, i){
+      median(data[i])
+    }
+    
+    if(input$options1 == "Mean"){
+      if(input$options3 == "Mean"){
+        but1 <- boot(meta1$TE, statistic = media, R = 1000)
+        plot(but1)
+      }
+      else{
+        but1 <- boot(meta1$TE, statistic = mediana, R = 1000)
+        plot(but1)
+      }
+    }
+    else{
+      if(input$options3 == "Mean"){
+        but2 <- boot(meta2$TE, statistic = media, R = 1000)
+        plot(but2)
+      }
+      else{
+        but2 <- boot(meta2$TE, statistic = mediana, R = 1000)
+        plot(but2)
+      }
+    }
+      
   }
   
   ################################################

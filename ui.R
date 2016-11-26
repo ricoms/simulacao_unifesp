@@ -27,6 +27,7 @@ ui <- dashboardPage(
             
             uiOutput("options1"),
             uiOutput("options2"),
+	    uiOutput("options3"),
             
             box(
               actionButton("go","Start", width = "60px"),
