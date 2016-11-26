@@ -1,3 +1,7 @@
+# Aplicativo disponibilizado em:
+
+https://ricoms.shinyapps.io/simulacao_unifesp/
+
 # simulacao_unifesp
 Repositório para projeto da UC **Simulação se sistemas**
 * pasta para guardar principais referências: https://drive.google.com/drive/folders/0B4BDW57sxsyvRHRPVnVsT04xNlE?usp=sharing
