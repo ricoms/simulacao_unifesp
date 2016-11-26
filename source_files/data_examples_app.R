@@ -23,3 +23,5 @@ df_med1 = data.frame(Estudos = c("Porcu et al. 2002",
                      n.c = c(30, 24, 81, 21),
                      mean.c = c(72.97, 81.63, 35.38, 3.48),
                      sd.c = c(13.23, 14.42, 16.13, 0.68))
+
+

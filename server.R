@@ -39,7 +39,11 @@ server <- function(input, output) {
         height = "320px",
         tabPanel("Manual Input",
                  wellPanel(
-                   rHandsontableOutput("hot_table")
+                   rHandsontableOutput("hot_table"),
+                   tags$hr(),
+                   column(width = 4,
+                          downloadButton('downloadData', 'Save data as .csv')
+                   )
                  )
         ),
         tabPanel("Import",
@@ -123,18 +127,16 @@ server <- function(input, output) {
     input$alpha
   })
   
-  # values será o espelho da rHandsonTable no programa
-  values <- reactiveValues(data = NULL)
+  # values será o espelho da rHandsonTable na memória do programa
+  values <- reactiveValues(data = df_prop)
   observeEvent (input$go, {
     values$data <- get(input$options1)
   })
-  
   # permite a edição direto na tabela rHandsonTable
   observe ({
     if(!is.null(input$hot))
       values$data <- hot_to_r(input$hot)
   })
-  
   # permite a importação à partir de um arquivo
   observeEvent (input$botao_arquivo, {
     inFile <- input$arquivo
@@ -142,7 +144,6 @@ server <- function(input, output) {
       return(NULL)
     values$data <- read.table(inFile$datapath, header = header(), sep = sep(), quote = quote())
   })
-  
   # Representa/renderiza a rHandsonTable
   output$hot_table <- renderRHandsontable({
     rhandsontable(values$data, rowHeaders = FALSE,
@@ -151,7 +152,6 @@ server <- function(input, output) {
                 allowRowEdit=TRUE) %>%
       hot_cols(columnSorting = TRUE, allowInvalid = TRUE)
   })
-  
   # Permite realizar o download da tabela visualizada
   output$downloadData <- downloadHandler(
     filename = function() { 
@@ -163,15 +163,13 @@ server <- function(input, output) {
   )
   
   # dados é a variável final que será levada para análise
-  dados <- reactiveValues(data = NULL)
-  
-  # dados só é atualizado quando botão plot (Submeter) é apertado
+  dados <- reactiveValues(data = df_prop)
   observeEvent(input$go, {
     dados$data <- values$data
   })
   
   # eff irá guardar o effect-size escolhido pelo usuário
-  eff <- reactiveValues(data = NULL)
+  eff <- reactiveValues(data = "oi")
   observeEvent (input$go, {
     eff$data <- input$options1
   })
@@ -218,10 +216,27 @@ server <- function(input, output) {
   ################################################
   # aplicar o boot nas estatísticas de objeto 'meta'
   ################################################
-  
+  plotBoot <- function(){
+    meta <- meta()
+    
+    
+  }
   
   ################################################
   # retornar plot(boot(data = amostra, statistic = amostra.mean, R = 1000))
   ################################################
-  
+  output$boot <- renderPlot ({
+    plotBoot()
+  })
+  # Permite realizar o download da figura Boot
+  output$downloadBoot <- downloadHandler(
+    filename <- function() {
+      paste('boot_', Sys.Date(), '.pdf', sep='')
+    },
+    content <- function(FILE=NULL) {
+      pdf(file=FILE)
+      plotForest()
+      dev.off()
+    }
+  )
 }
