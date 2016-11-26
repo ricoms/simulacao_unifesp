@@ -27,6 +27,12 @@ server <- function(input, output) {
                 choices = c("Mean","Median"))
   })
   
+  #Selecionar media ou mediana para teste Q
+  output$options3 <- renderUI({
+    selectInput(inputId = "options3", label = "Statistic for Bootstrapping",
+                 choices = c("Mean","Median"), selected=NULL)
+  })
+  
   #Abas sendo criadas
   output$desc <- renderUI({
     if(input$go){
@@ -235,6 +241,7 @@ server <- function(input, output) {
       }
     }
   }
+      
   output$boot <- renderPlot ({
     plotBoot()
   })
