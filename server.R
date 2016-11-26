@@ -11,15 +11,20 @@ server <- function(input, output) {
   #Selecionar medida resumo
   output$options1 <- renderUI({
     selectInput(inputId = "options1", label = "Effect Sizes",
-                choices = c("Mean"='df_med1',"Proportion"='df_prop'),
-                selected=NULL)
+                choices = c("Mean"='df_med1',"Proportion"='df_prop'))
   })
   
   #Selecionar nível de significância
-  output$options2 <- renderUI({
-    numericInput(inputId = "options2", label = "Level of significance",
-                 value = 0.95, min = 0.00, max = 1,
-                 width = 100, step = 0.01)
+  # output$options2 <- renderUI({
+  #   numericInput(inputId = "options2", label = "Level of significance",
+  #                value = 0.05, min = 0.00, max = 1,
+  #                width = 100, step = 0.01)
+  # })
+  
+  #Selecionar estatística para o Bootstrap
+  output$options3 <- renderUI({
+    selectInput(inputId = "options3", label = "Statistic for Bootstrapping",
+                choices = c("Mean","Median"))
   })
   
   #Abas sendo criadas
@@ -36,14 +41,15 @@ server <- function(input, output) {
         title = "Input data",
         id = "ttabs",
         width = 12,
-        height = "320px",
         tabPanel("Manual Input",
                  wellPanel(
                    rHandsontableOutput("hot_table"),
-                   tags$hr(),
-                   column(width = 4,
-                          downloadButton('downloadData', 'Save data as .csv')
-                   )
+                  tags$hr(),
+                  tags$head(
+                    tags$style(HTML('#analyse{background-color:orange}'))
+                  ),
+                  actionButton("analyse","Analyse", width = "150px"),
+                  downloadButton('downloadData', 'Save data as .csv')
                  )
         ),
         tabPanel("Import",
@@ -75,42 +81,36 @@ server <- function(input, output) {
   })
   
   output$results <- renderUI({
-    if(input$analyse){
+    #if(input$analyse){
       tabBox(
         title = "Results",
         id = "tresults",
         width = 12,
-        height = "400px",
         tabPanel("Forest Plot",
                 wellPanel(
                     plotOutput("forest"),
-                    tags$hr(),
-                    column(width = 4,
-                           downloadButton('downloadForest', 'Save forest as pdf')
-                    )
+                    downloadButton('downloadForest', 'Save forest as pdf')
                 )
         ),
         tabPanel("Teste Q boot result",
                 wellPanel(
                   plotOutput("boot"),
-                  tags$hr(),
-                  column(width = 4,
-                         downloadButton('downloadBoot', 'Save boot as pdf')
-                  )
+                  downloadButton('downloadBoot', 'Save boot as pdf')
                 )
+        ),
+        tabPanel("Boot Data",
+                 wellPanel(
+                  verbatimTextOutput("but_data")
+                 )
+        ),
+        tabPanel("Boot Density",
+                 wellPanel(
+                   plotOutput("dens"),
+                   downloadButton('downloadDensity', 'Save plot as pdf')
+                 )
         )
       )
-    }
-  })
-  
-  output$analise <- renderUI({
-    if(input$go){
-      box(
-        actionButton("analyse","Analyse", width = "150px"),
-        background = "light-blue",
-        width = 2
-      )
-    }
+    #} 
   })
   
   # configurações do usuário para upload de arquivo
@@ -214,17 +214,27 @@ server <- function(input, output) {
   )
   
   ################################################
-  # aplicar o boot nas estatísticas de objeto 'meta'
+  # Renderização do Boot plot
   ################################################
   plotBoot <- function(){
     meta <- meta()
     
-    
+    if(input$options3 == "Mean"){
+      media = function(data, i) {
+        mean(data[i])
+      }
+      but <- boot(meta$TE, statistic = media, R = 1000)
+      plot(but)
+    } else {
+      if(input$options3 == "Median") {
+        mediana = function(data, i){
+          median(data[i])
+        }
+        but <- boot(meta$TE, statistic = mediana, R = 1000)
+        plot(but)
+      }
+    }
   }
-  
-  ################################################
-  # retornar plot(boot(data = amostra, statistic = amostra.mean, R = 1000))
-  ################################################
   output$boot <- renderPlot ({
     plotBoot()
   })
@@ -235,7 +245,72 @@ server <- function(input, output) {
     },
     content <- function(FILE=NULL) {
       pdf(file=FILE)
-      plotForest()
+      plotBoot()
+      dev.off()
+    }
+  )
+  
+  ################################################
+  # Renderização do Boot data
+  ################################################
+  plotButData <- function(){
+    meta <- meta()
+    
+    if(input$options3 == "Mean"){
+      media = function(data, i) {
+        mean(data[i])
+      }
+      but <- boot(meta$TE, statistic = media, R = 1000)
+      but
+    } else {
+      if(input$options3 == "Median") {
+        mediana = function(data, i){
+          median(data[i])
+        }
+        but <- boot(meta$TE, statistic = mediana, R = 1000)
+        but
+      } else {
+        frame()
+      }
+    }
+  }
+  output$but_data <- renderPrint ({
+    plotButData()
+  })
+  
+  ################################################
+  # Renderização do density plot
+  ################################################
+  plotDens <- function(){
+    meta <- meta()
+    
+    if(input$options3 == "Mean"){
+      media = function(data, i) {
+        mean(data[i])
+      }
+      but <- boot(meta$TE, statistic = media, R = 1000)
+      plot(density(but$t))
+    } else {
+      if(input$options3 == "Median") {
+        mediana = function(data, i){
+          median(data[i])
+        }
+        but <- boot(meta$TE, statistic = mediana, R = 1000)
+        plot(density(but$t))
+      }
+    }
+  }
+  output$dens <- renderPlot ({
+    plotDens()
+  })
+  # Permite realizar o download da figura Boot
+  output$downloadDensity <- downloadHandler(
+    filename <- function() {
+      paste('density_', Sys.Date(), '.pdf', sep='')
+    },
+    content <- function(FILE=NULL) {
+      pdf(file=FILE)
+      plotDens()
       dev.off()
     }
   )

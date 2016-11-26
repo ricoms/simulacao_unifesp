@@ -31,8 +31,21 @@ meta2 = metacont(data = df_med1,
 media = function(data, i) {
   mean(data[i])
 }
-
 but1 = boot(meta1$TE, statistic = media, R = 1000)
-but1
-
+plot(but1)
 but2 = boot(meta2$TE, statistic = media, R = 1000)
+plot(but2)
+
+mediana = function(data, i) {
+  median(data[i])
+}
+but3 = boot(meta1$TE, statistic = mediana, R = 1000)
+plot(but1)
+but4 = boot(meta2$TE, statistic = mediana, R = 1000)
+plot(but2)
+
+meta1$Q
+
+par(mfrow=c(1,2),oma=c(0,0,2,0))
+plot(density(but1$t))
+plot(density(but3$t))
