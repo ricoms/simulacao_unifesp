@@ -8,6 +8,106 @@ library(meta)
 source('source_files/data_examples_app.R', local=TRUE)
 
 server <- function(input, output) {
+  #Selecionar medida resumo
+  output$options1 <- renderUI({
+    selectInput(inputId = "options1", label = "Effect Sizes",
+                choices = c("Mean"='df_med1',"Proportion"='df_prop'),
+                selected=NULL)
+  })
+  
+  #Selecionar nível de significância
+  output$options2 <- renderUI({
+    numericInput(inputId = "options2", label = "Level of significance",
+                 value = 0.95, min = 0.00, max = 1,
+                 width = 100, step = 0.01)
+  })
+  
+  #Abas sendo criadas
+  output$desc <- renderUI({
+    if(input$go){
+      box(title = "Meta-analysis", width = 12, solidHeader = TRUE, status = "primary",
+          "Select your type of input for building your analysis."
+      )
+    }
+  })
+  output$painel <- renderUI({
+    if(input$go){
+      tabBox(
+        title = "Input data",
+        id = "ttabs",
+        width = 12,
+        height = "320px",
+        tabPanel("Manual Input",
+                 wellPanel(
+                   rHandsontableOutput("hot_table")
+                 )
+        ),
+        tabPanel("Import",
+                 fluidRow(
+                   column(
+                     4,
+                     checkboxInput(inputId = "header", label = "Cabeçalho", TRUE),
+                     radioButtons(inputId = "sep", label = "Separador",
+                                  choices = c('virgula'=',', 'ponto e virgula'=';','tabulação'='\t'), selected = ","),
+                     radioButtons(inputId = "quote", label = "Citação",
+                                  choices = c('sem'='', 'aspas duplas'='"','aspas simples'="'"),selected = '"')
+                   ),
+                   column(
+                     8,
+                     fileInput("arquivo", "Escolher arquivo .csv ou .txt",
+                               accept=c('text/csv','text/comma-separated-values',
+                                        'text/tab-separated-values','text/plain','.csv','.tsv','.txt')),
+                     actionButton("botao_arquivo", "Importar arquivo"),
+                     tags$hr(),
+                     tags$p("Escreva suas entradas em um arquivo .csv ou .txt."),
+                     tags$p("Cada linha de seu arquivo será considerada como uma observação multivariada.")
+                   )
+                   
+                 )#endfluidrow
+                 
+        )#endtabpanel
+      )#endtabbox
+    }
+  })
+  
+  output$results <- renderUI({
+    if(input$analyse){
+      tabBox(
+        title = "Results",
+        id = "tresults",
+        width = 12,
+        height = "400px",
+        tabPanel("Forest Plot",
+                wellPanel(
+                    plotOutput("forest"),
+                    tags$hr(),
+                    column(width = 4,
+                           downloadButton('downloadForest', 'Save forest as pdf')
+                    )
+                )
+        ),
+        tabPanel("Teste Q boot result",
+                wellPanel(
+                  plotOutput("boot"),
+                  tags$hr(),
+                  column(width = 4,
+                         downloadButton('downloadBoot', 'Save boot as pdf')
+                  )
+                )
+        )
+      )
+    }
+  })
+  
+  output$analise <- renderUI({
+    if(input$go){
+      box(
+        actionButton("analyse","Analyse", width = "150px"),
+        background = "light-blue",
+        width = 2
+      )
+    }
+  })
   
   # configurações do usuário para upload de arquivo
   header <- reactive({
@@ -24,7 +124,10 @@ server <- function(input, output) {
   })
   
   # values será o espelho da rHandsonTable no programa
-  values <- reactiveValues(data = df1)
+  values <- reactiveValues(data = NULL)
+  observeEvent (input$go, {
+    values$data <- get(input$options1)
+  })
   
   # permite a edição direto na tabela rHandsonTable
   observe ({
@@ -60,20 +163,26 @@ server <- function(input, output) {
   )
   
   # dados é a variável final que será levada para análise
-  dados <- reactiveValues(data = df1)
+  dados <- reactiveValues(data = NULL)
   
   # dados só é atualizado quando botão plot (Submeter) é apertado
-  observeEvent(input$run, {
+  observeEvent(input$go, {
     dados$data <- values$data
+  })
+  
+  # eff irá guardar o effect-size escolhido pelo usuário
+  eff <- reactiveValues(data = NULL)
+  observeEvent (input$go, {
+    eff$data <- input$options1
   })
   
   ################################################
   # Cálculo do objeto meta
   ################################################
   meta <- reactive({
-    source('define_meta_app.R', local=TRUE)
-    if (modelo$data %in% names(compute_meta)) {
-      meta <- do.call(compute_meta[[modelo$data]], arg_meta[[modelo$data]])
+    source('source_files/define_meta_app.R', local=TRUE)
+    if (eff$data %in% names(compute_meta)) {
+      meta <- do.call(compute_meta[[eff$data]], arg_meta[[eff$data]])
     } else {
       NULL
     }
@@ -85,15 +194,10 @@ server <- function(input, output) {
   plotForest <- function(){
     meta <- meta()
     if (!is.null(meta)) {
-      if (1-pchisq(meta$Q, meta$df.Q) > alpha()) { # if p-value > alpha só apresenta fixed effect model
-        forest(meta, studlab = paste(dados$data$Estudos),
-               comb.random=FALSE, comb.fixed=TRUE)
-      } else {
-        forest(meta, studlab = paste(dados$data$Estudos),
-               comb.random=TRUE, comb.fixed=FALSE)
-      }
+     forest(meta, studlab = paste(dados$data$Estudos),
+            comb.random=TRUE, comb.fixed=TRUE)
     } else {
-      frame()
+      NULL
     }
   }
   output$forest <- renderPlot ({

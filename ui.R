@@ -1,107 +1,61 @@
 ## ui.R ##
 library(shinydashboard)
-library(rhandsontable)
 
-ui <- dashboardPage(skin = "yellow",
+ui <- dashboardPage(
+  skin = "yellow",
   dashboardHeader(title = "Bootstrap analyzer"),
   
   dashboardSidebar(
     sidebarMenu(
-      menuItem("App", tabName = "app", icon = icon("home")),
-      menuItem("About", tabName = "about", icon = icon("glyphicon glyphicon-info-sign", lib= "glyphicon"))
-    )
-  ),
-  
-  dashboardBody(
-    tags$head(
-      tags$link(rel = "stylesheet", type = "www/css", href = "custom.css")
-    ),
-    
-    tabItems(
-      
-      ########################
-      # Conteúdo da Página App
-      tabItem(tabName = "app",
-              
-        ########################
-        # Painel principal - App
+      id = "menu",
+      menuItem("About", tabName = "about"),
+      menuItem("App", tabName = "app"),
+
+      #Elaborando painel caso seja selecionado App
+      conditionalPanel(
+        condition = "input.menu == 'app'",
+        below = "about",
         fluidRow(
-          box(title = "Entrada dos dados", status = "primary", collapsible = TRUE, width = 12,
-              checkboxInput(inputId = 'subir_arquivo',
-                            label = 'Importar arquivo?'
-              ),
-              fluidRow(
-                column(12,
-                       wellPanel(
-                         rHandsontableOutput("hot_table")
-                       )
-                )
-              )
-          )
-        ),
-        # Fim de Painel Principal - App
-        ########################
-        
-        ########################
-        # Painel para importação de arquivo
-        conditionalPanel(
-          condition = "input.subir_arquivo == true",
-          fluidRow(
-            column(4,
-                   checkboxInput(inputId = 'header',
-                                 label = 'Cabeçalho',
-                                 TRUE),
-                   radioButtons(inputId = 'sep',
-                                label = 'Separador',
-                                choices = c('virgula'=',',
-                                            'ponto e virgula'=';',
-                                            'tabulação'='\t'),
-                                selected = ','),
-                   radioButtons(inputId = 'quote',
-                                label = 'Citaçao',
-                                choices = c('sem'='',
-                                            'aspas duplas'='"',
-                                            'aspas simples'="'"),
-                                selected = '"')
+          column(
+            width = 12,
+            box(
+              title = "Selection",
+              width = 12,
+              background = "orange",
+              "Choose right values to start."
             ),
-            column(8,
-                   fileInput('arquivo', 'Escolher arquivo .csv ou .txt',
-                             multiple = FALSE,
-                             accept = c('text/csv',
-                                        'text/comma-separated-values',
-                                        'text/tab-separated-values',
-                                        'text/plain',
-                                        '.csv',
-                                        '.tsv',
-                                        '.txt'
-                             )
-                   ),
-                   actionButton("botao_arquivo", "Importar arquivo"),
-                   tags$hr(),
-                   tags$p("Escreva suas entradas em um arquivo .csv ou .txt."),
-                   tags$p("Cada linha de seu arquivo será considerada como uma observação multivariada.")
+            
+            uiOutput("options1"),
+            uiOutput("options2"),
+            
+            box(
+              actionButton("go","Start", width = "60px"),
+              background = "orange"
             )
-          )
-        )
-        # Fim de Painel para importação de arquivo
-        ########################
+            
+          )#endcolumn
+        )#endfluidrow
         
-        ############################## incluir aqui janela de configuração da função boot
+      )#endconditional
+    )#endsidebarmenu
+  ),#endsidebar
+  
+  #Dashboard body
+  dashboardBody(
+    tabItems(
+      tabItem(
+        tabName = "app",
+        uiOutput("desc"),
+        uiOutput("painel"),
+        uiOutput("analise"),
+        uiOutput("results")
       ),
-      # Fim de TabItem "app"
-      ########################
-      
-      ########################
-      # Painel about
-      tabItem(tabName = "about",
-              h2("Projeto: Bootstrap analyzer"),
-              p("Orientadora: Prof. Dra. Camila Bertini Martins"),
-              p("Alunos: Alexandre Hild Aono (92169) & Ricardo Manhães Savii (92482)")
+      tabItem(
+        tabName = "about",
+        h2("Projeto: Bootstrap analyzer"),
+        p("Orientadora: Prof. Dra. Camila Bertini Martins"),
+        p("Alunos: Alexandre Hild Aono (92169) & Ricardo Manhães Savii (92482)")
       )
-    )
-    # Fim de TabItems
-    ########################
-  )
-  # Fim de Dashboard body
-  ########################
+    )#enditems
+  )#enddashbody
 )
