@@ -1,11 +1,23 @@
-# Aplicativo disponibilizado em:
-
-https://ricoms.shinyapps.io/simulacao_unifesp/
-
 # simulacao_unifesp
 Repositório para projeto da UC **Simulação se sistemas**
 * pasta para guardar principais referências: https://drive.google.com/drive/folders/0B4BDW57sxsyvRHRPVnVsT04xNlE?usp=sharing
 * link para o texto do artigo: https://www.overleaf.com/6125904mkqzzy
+
+Este projeto desenvolveu um aplicativo com o pacote **Shiny** para a disciplinade Simulação de Sistemas no curso de Bacharel em Ciência e Tecnologia da Universidade Federal de São Paulo.
+
+## Objetivo
+
+Implementar uma interface de técnicas como **bootstrap** e **meta-análise** da estatística para facilitar o uso correto destas, através de uma interface amigável e eficiente.
+
+Há uma versão online do aplicativo para testes, o servidor é gratuito então pode estar fora do ar.
+
+E caso queira testar em sua máquina, irá precisar seguir as orientaçes abaixo de instalação e requisitos do projeto.
+Os arquivos principais do projeto são [server.R](https://github.com/ricoms/simulacao_unifesp/blob/master/server.R) e [ui.R](https://github.com/ricoms/simulacao_unifesp/blob/master/ui.R). Projeto desenvolvido na modalidade de duplo arquivo sugerido pelo [tutorial oficial do pacote Shiny](https://shiny.rstudio.com/tutorial/).
+
+## Aplicativo disponibilizado em:
+
+https://ricoms.shinyapps.io/simulacao_unifesp/
+
 
 # Instalando requisitos do projeto
 Em sistema Ubuntu, realizar até o passo 4 deste tutorial:
